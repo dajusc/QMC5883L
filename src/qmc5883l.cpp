@@ -6,8 +6,6 @@ License:     MIT
 */
 
 #include "qmc5883l.h"
-#include "Wire.h"
-#include "math.h"
 
 //QMC5883L::QMC5883L(void) {
 //
@@ -29,7 +27,7 @@ void QMC5883L::begin(bool enableAdjust=false) {
   this->enableAdjust = enableAdjust;
 }
 
-void QMC5883L::doAdjust(int &x, int &y, int &z) {
+void QMC5883L::doAdjust(int16_t &x, int16_t &y, int16_t &z) {
   if (!this->enableAdjust) return;
 
   if (x < this->hxyzminmax[0]) this->hxyzminmax[0] = x;
@@ -44,7 +42,7 @@ void QMC5883L::doAdjust(int &x, int &y, int &z) {
   z -= (this->hxyzminmax[4] + this->hxyzminmax[5]) / 2;
 }
 
-bool QMC5883L::getMagnetfieldSingle(int &x, int &y, int &z) {
+bool QMC5883L::getMagnetfieldSingle(int16_t &x, int16_t &y, int16_t &z) {
   Wire.beginTransmission(QMC5883L_I2C_ADDRESS);
   Wire.write(QMC5883L_REG_DOUTLSB);
   Wire.endTransmission();
@@ -64,7 +62,7 @@ bool QMC5883L::getMagnetfieldSingle(int &x, int &y, int &z) {
   return true;
 }
 
-bool QMC5883L::getTemperatureSingle(int &t) {
+bool QMC5883L::getTemperatureSingle(int16_t &t) {
   Wire.beginTransmission(QMC5883L_I2C_ADDRESS);
   Wire.write(QMC5883L_REG_TEMP);
   Wire.endTransmission();
@@ -79,11 +77,11 @@ bool QMC5883L::getTemperatureSingle(int &t) {
   return true;
 }
 
-bool QMC5883L::getMagnetfield(int &x, int &y, int &z, int navg=1) {
+bool QMC5883L::getMagnetfield(int16_t &x, int16_t &y, int16_t &z, int navg=1) {
   x = 0;  y = 0;  z = 0;
 
   for (int i=0; i<navg; i++) {
-    int xt, yt, zt;
+    int16_t xt, yt, zt;
     if (this->getMagnetfieldSingle(xt, yt, zt)) {
       x += xt;  y += yt;  z += zt;
     } else {
@@ -96,11 +94,11 @@ bool QMC5883L::getMagnetfield(int &x, int &y, int &z, int navg=1) {
   return true;
 }
 
-bool QMC5883L::getTemperature(int &t, int navg=1) {
+bool QMC5883L::getTemperature(int16_t &t, int navg=1) {
   t = 0;
 
   for (int i=0; i<navg; i++) {
-    int tt;
+    int16_t tt;
     if (this->getTemperatureSingle(tt)) {
       t += tt;
     } else {
@@ -114,7 +112,7 @@ bool QMC5883L::getTemperature(int &t, int navg=1) {
 }
 
 bool QMC5883L::getDirectionXY(double &a, int navg=1) {
-  int x, y, z;
+  int16_t x, y, z;
   if (this->getMagnetfield(x, y, z, navg)) {
     a = atan2(-y, x) * 180.0 / 3.141 + 180.0;
     return true;

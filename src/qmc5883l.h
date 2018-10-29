@@ -5,6 +5,10 @@ Tested for:  Arduino Uno
 License:     MIT
 */
 
+#include <Arduino.h>
+#include "Wire.h"
+#include "math.h"
+
 #ifndef QMC5883L_H
 #define QMC5883L_H
 
@@ -29,16 +33,16 @@ class QMC5883L {
   private:
     bool enableAdjust  = false;
     int  hxyzminmax[6] = {+9999,-9999,+9999,-9999,+9999,-9999};
-    void doAdjust(int &x, int &y, int &z);
-    bool getMagnetfieldSingle(int &x, int &y, int &z);
-    bool getTemperatureSingle(int &t);
+    void doAdjust(int16_t &x, int16_t &y, int16_t &z);
+    bool getMagnetfieldSingle(int16_t &x, int16_t &y, int16_t &z);
+    bool getTemperatureSingle(int16_t &t);
 
   public:
     //QMC5883L(void);
     void begin(bool enableAdjust);
-    bool getMagnetfield(int &x, int &y, int &z, int navg);
+    bool getMagnetfield(int16_t &x, int16_t &y, int16_t &z, int navg);
     bool getDirectionXY(double &a, int navg);
-    bool getTemperature(int &t, int navg);
+    bool getTemperature(int16_t &t, int navg);
 };
 
 #endif
