@@ -35,10 +35,10 @@ class QMC5883L {
 
   public:
     //QMC5883L(void);
-    void begin(bool enableAdjust=false);
-    bool getMagnetfield(int &x, int &y, int &z, int navg=1);
-    bool getDirectionXY(double &a, int navg=1);
-    bool getTemperature(int &t, int navg=1);
+    void begin(bool enableAdjust);
+    bool getMagnetfield(int &x, int &y, int &z, int navg);
+    bool getDirectionXY(double &a, int navg);
+    bool getTemperature(int &t, int navg);
 };
 
 #endif
