@@ -1,15 +1,14 @@
 # QMC5883L
 An Arduino library for QMC5883L magnetsensor.
 
-## Overview
-This I2C library features:
-- Configurable averaging to increase accuracy (OFF per default)
-- Zero-value-adjustment for each axis considering min/max interval (OFF per default)
+## Feature Overview
+- Averaging to reduce noise *(disabled per default)*
+- Zero-value-adjustment for each axis *(disabled per default)*
 - Calculate sendor orientation/direction in XY-plane
-- Get Temperature
+- Read Temperature
+- I2C interface
 
-## Usage
-Basic example without adjustment:
+## Basic example without adjustment
 ```
 #include <qmc5883l.h>
 QMC5883L QMC;
@@ -44,7 +43,8 @@ void loop() {
   delay(500);
 }
 ```
-Basic example with averaging:
+## Basic example with averaging
+In the following example five sequential sensor readings are executed and then the average value is returned.
 ```
 #include <qmc5883l.h>
 QMC5883L QMC;
@@ -59,7 +59,7 @@ void setup() {
 }
 
 void loop() {
-  QMC.getMagnetfield(x, y, z, 5); // <-- Averagig over 5 seperate sensor readings
+  QMC.getMagnetfield(x, y, z, 5); // <-- Averagig over 5 sensor readings
   Serial.print("H = (");
   Serial.print(x); Serial.print(", ");
   Serial.print(y); Serial.print(", ");
@@ -69,7 +69,13 @@ void loop() {
   delay(500);
 }
 ```
-Basic example with zero-value-adjustment:
+## Basic example with zero-value-adjustment
+In the following example the zero-value-adjustment is enabled.
+The adjustment is done by keeping track of the min/max interval of the raw sensor readings for each axis (Hx, Hy, Hz).
+Any unsymetry is then compensated by adding the corresponding linear offset to the returned values.
+
+*PLEASE NOTE*: The sensor needs to be "calibrated" by rotating it around all axis.
+Before that, the returned values will be considerably worse than in the non-adjusted mode.
 ```
 #include <qmc5883l.h>
 QMC5883L QMC;
