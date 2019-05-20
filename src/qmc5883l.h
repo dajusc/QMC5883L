@@ -43,6 +43,7 @@ class QMC5883L {
     bool getMagnetfield(int16_t &x, int16_t &y, int16_t &z, int navg);
     bool getDirectionXY(double &a, int navg);
     bool getTemperature(int16_t &t, int navg);
+    bool getAdjustment(int16_t &x, int16_t &y, int16_t &z);
 };
 
 #endif

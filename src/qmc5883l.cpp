@@ -121,3 +121,9 @@ bool QMC5883L::getDirectionXY(double &a, int navg=1) {
     return false;
   }
 }
+
+bool QMC5883L::getAdjustment(int16_t &x, int16_t &y, int16_t &z) {
+  x = -(this->hxyzminmax[0] + this->hxyzminmax[1]) / 2;
+  y = -(this->hxyzminmax[2] + this->hxyzminmax[3]) / 2;
+  z = -(this->hxyzminmax[4] + this->hxyzminmax[5]) / 2;
+}
