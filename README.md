@@ -69,10 +69,11 @@ void loop() {
   delay(500);
 }
 ```
-## Example with zero-value-adjustment
-In the following example the zero-value-adjustment is enabled.
+## Example with automatic zero-value-adjustment
+In the following example the automatic zero-value-adjustment is enabled.
 The adjustment is done by keeping track of the min/max interval of the raw sensor readings for each axis (Hx, Hy, Hz).
 Any unsymetry is then compensated by adding the corresponding linear offset to the returned values.
+The resulting adjustment vector is printed out at the end of the example.
 
 *PLEASE NOTE*: The sensor needs to be "calibrated" by rotating it around all axis.
 Before that, the returned values will be considerably worse than in the non-adjusted mode.
@@ -87,6 +88,38 @@ double a;
 void setup() {
   Serial.begin(115200);
   QMC.begin(true); // true --> enable zero-value-adjustment
+}
+
+void loop() {
+  QMC.getMagnetfield(x, y, z);
+  Serial.print("H = (");
+  Serial.print(x); Serial.print(", ");
+  Serial.print(y); Serial.print(", ");
+  Serial.print(z); Serial.print(")  \t");
+
+  QMC.getAdjustment(x, y, z);
+  Serial.print("Ha = (");
+  Serial.print(x); Serial.print(", ");
+  Serial.print(y); Serial.print(", ");
+  Serial.print(z); Serial.print(")  \t");
+
+  Serial.println("");
+  delay(500);
+}
+```
+## Example with manual zero-value-adjustment
+In the following example the manual zero-value-adjustment is enabled.
+```cpp
+#include <qmc5883l.h>
+QMC5883L QMC;
+
+int    x, y, z;
+int    t;
+double a;
+
+void setup() {
+  Serial.begin(115200);
+  QMC.begin(120, +540, -590);
 }
 
 void loop() {

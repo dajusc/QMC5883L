@@ -32,7 +32,7 @@ class QMC5883L {
 
   private:
     bool enableAdjust  = false;
-    int  hxyzminmax[6] = {+9999,-9999,+9999,-9999,+9999,-9999};
+    int16_t hxyzminmax[6] = {+9999,-9999,+9999,-9999,+9999,-9999};
     void doAdjust(int16_t &x, int16_t &y, int16_t &z);
     bool getMagnetfieldSingle(int16_t &x, int16_t &y, int16_t &z);
     bool getTemperatureSingle(int16_t &t);
@@ -40,6 +40,7 @@ class QMC5883L {
   public:
     //QMC5883L(void);
     void begin(bool enableAdjust);
+    void begin(const int16_t x, const int16_t y, const int16_t z);
     bool getMagnetfield(int16_t &x, int16_t &y, int16_t &z, int navg);
     bool getDirectionXY(double &a, int navg);
     bool getTemperature(int16_t &t, int navg);

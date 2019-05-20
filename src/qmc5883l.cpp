@@ -27,15 +27,26 @@ void QMC5883L::begin(bool enableAdjust=false) {
   this->enableAdjust = enableAdjust;
 }
 
-void QMC5883L::doAdjust(int16_t &x, int16_t &y, int16_t &z) {
-  if (!this->enableAdjust) return;
+void QMC5883L::begin(const int16_t x, const int16_t y, const int16_t z) {
+  this->begin(false);
 
-  if (x < this->hxyzminmax[0]) this->hxyzminmax[0] = x;
-  if (x > this->hxyzminmax[1]) this->hxyzminmax[1] = x;
-  if (y < this->hxyzminmax[2]) this->hxyzminmax[2] = y;
-  if (y > this->hxyzminmax[3]) this->hxyzminmax[3] = y;
-  if (z < this->hxyzminmax[4]) this->hxyzminmax[4] = z;
-  if (z > this->hxyzminmax[5]) this->hxyzminmax[5] = z;
+  this->hxyzminmax[0] = -x;
+  this->hxyzminmax[1] = -x;
+  this->hxyzminmax[2] = -y;
+  this->hxyzminmax[3] = -y;
+  this->hxyzminmax[4] = -z;
+  this->hxyzminmax[5] = -z;
+}
+
+void QMC5883L::doAdjust(int16_t &x, int16_t &y, int16_t &z) {
+  if (this->enableAdjust) {
+    if (x < this->hxyzminmax[0]) this->hxyzminmax[0] = x;
+    if (x > this->hxyzminmax[1]) this->hxyzminmax[1] = x;
+    if (y < this->hxyzminmax[2]) this->hxyzminmax[2] = y;
+    if (y > this->hxyzminmax[3]) this->hxyzminmax[3] = y;
+    if (z < this->hxyzminmax[4]) this->hxyzminmax[4] = z;
+    if (z > this->hxyzminmax[5]) this->hxyzminmax[5] = z;
+  }
 
   x -= (this->hxyzminmax[0] + this->hxyzminmax[1]) / 2;
   y -= (this->hxyzminmax[2] + this->hxyzminmax[3]) / 2;
